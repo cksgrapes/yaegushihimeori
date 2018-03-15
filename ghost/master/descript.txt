@@ -1,0 +1,13 @@
+charset,UTF-8
+type,ghost
+name,週末は、きみの部屋で。
+sakura.name,八重櫛姫織
+kero.name,ユーザ
+
+craftman,MasakiChikashi
+craftmanw,正木千樫
+craftmanurl,http://chikashi.org/ghost/
+
+shiori,yaya.dll
+
+sstp.allowunspecifiedsend,1

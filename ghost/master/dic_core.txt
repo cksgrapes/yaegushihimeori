@@ -1,0 +1,724 @@
+/*=============================================================================
+  Masaki Chikashi Ghost Templates
+  コア設定辞書
+  Last up date: 2018/03/15
+=============================================================================*/
+
+/*-----------------------------------------------------------------------------
+  ランダムトーク処理
+-----------------------------------------------------------------------------*/
+
+RandomTalk
+{
+	//おまじない
+	'\1\s[10]\0\s[0]'
+	--
+	DelayedTalkEval(RandomTalkEx())
+}
+
+RandomTalkEx : nonoverlap
+{
+	parallel RandomTalkArrayNewTalk
+}
+
+RandomTalkArrayNewTalk
+{
+	_talknew_func = IARRAY
+	_talknew_func ,= 'AddNew.TalkNormal'
+	_earray = GetEvalTalkArray
+	_n = ARRAYSIZE(_earray)
+	for _i = 0 ; _i < _n ; _i++ {
+		_talknew_func ,= 'AddNew.Talk' + _earray[_i]
+	}
+
+	if ISVAR('last_new_talk_id_array') == 0 {
+		last_new_talk_id_array = IARRAY
+	}
+	if ISVAR('last_new_talk_array') == 0 {
+		last_new_talk_array = IARRAY
+	}
+
+	_changed = 0
+	_n = ARRAYSIZE(_talknew_func)
+	for _i = 0 ; _i < _n ; _i++ {
+		_talknew = TalkEval(_talknew_func[_i])
+
+		_tnum = ARRAYSIZE(_talknew)
+		if _tnum >= 2 { //1行目は日付
+
+			_idx = RE_ASEARCH("^\Q%(_talknew_func[_i])\E,",last_new_talk_id_array)
+			_date = "%(_talknew_func[_i]),%(_talknew[0])"
+
+			if _idx >= 0 {
+				if last_new_talk_id_array[_idx] != _date {
+					last_new_talk_array ,= _talknew[1,_tnum-1]
+					last_new_talk_id_array[_idx] = _date
+					_changed = 1
+				}
+			}
+			else {
+				last_new_talk_array ,= _talknew[1,_tnum-1]
+				last_new_talk_id_array ,= _date
+				_changed = 1
+			}
+		}
+	}
+
+	if _changed {
+		last_new_talk_array = UNIQUE(last_new_talk_array)
+	}
+
+	_n = ARRAYSIZE(last_new_talk_array)
+	if _n >= 1 {
+		_rand = RAND(_n)
+		last_new_talk_array[_rand]
+		last_new_talk_array[_rand] = IARRAY
+		return
+	}
+	RandomTalkArrayEx
+}
+
+RandomTalkArray
+{
+	_talk    = IARRAY
+	_talknew = TalkEval('AddNew.TalkNormal')
+	_n       = ARRAYSIZE(_talknew)
+	if _n >= 2 { //1行目は日付
+		_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
+	}
+	//季節その他
+	_earray = GetEvalTalkArray
+	_n = ARRAYSIZE(_earray)
+	for _i = 0 ; _i < _n ; _i++ {
+		_talknew = TalkEval('AddNew.Talk' + _earray[_i])
+		_tnum = ARRAYSIZE(_talknew)
+		if _tnum >= 2 { //1行目は日付
+			_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
+		}
+
+		_talk ,= TalkEval('Talk' + _earray[_i])
+	}
+	//そしてこれがふつう
+	_talk ,= TalkEval('TalkNormal')
+
+	_talk
+}
+
+RandomTalkArrayEx
+{
+	_talk    = IARRAY
+	_talknew = TalkEval('AddNew.TalkNormal')
+	_n       = ARRAYSIZE(_talknew)
+	if _n >= 2 { //1行目は日付
+		_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
+	}
+	//季節その他
+	_earray = GetEvalTalkArray
+	_n = ARRAYSIZE(_earray)
+	for _i = 0 ; _i < _n ; _i++ {
+		_talknew = TalkEval('AddNew.Talk' + _earray[_i])
+		_tnum = ARRAYSIZE(_talknew)
+		if _tnum >= 2 { //1行目は日付
+			_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
+		}
+
+		_talk ,= TalkEval('Talk' + _earray[_i])
+	}
+	//そしてこれがふつう
+	_talk ,= TalkEval('TalkNormal')
+
+	_cond    = GetConditionArray
+	_cnum    = ARRAYSIZE(_cond)
+
+	for _i = 0 ; _i < _cnum ; _i++ {
+		_talknew = TalkEval('AddNew.TalkNormal.' + _cond[_i])
+		_n       = ARRAYSIZE(_talknew)
+		if _n >= 2 { //1行目は日付
+			_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
+		}
+		//季節その他
+		_earray = GetEvalTalkArray
+		_n = ARRAYSIZE(_earray)
+		for _j = 0 ; _j < _n ; _j++ {
+			_talknew = TalkEval('AddNew.Talk' + _earray[_j] + '.' + _cond[_i])
+			_tnum = ARRAYSIZE(_talknew)
+			if _tnum >= 2 { //1行目は日付
+				_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
+			}
+
+			_talk ,= TalkEval('Talk' + _earray[_j] + '.' + _cond[_i])
+		}
+		//そしてこれがふつう
+		_talk ,= TalkEval('TalkNormal.' + _cond[_i])
+	}
+
+	_talk
+}
+
+GetEvalTalkArray
+{
+	_t         = GETTIME()
+	_y         = _t[0]
+	_m         = _t[1]
+	_d         = _t[2]
+	_mts       = GetMonthSlot
+	_event     = GetEventSlot
+	_holiday   = GetHolidaySlot
+	_dayofweek = GetDOWSlot
+
+	_season = GetSeasonSlot
+	_time   = GetTimeSlot
+
+	_slots = IARRAY
+
+	//一般的なおおざっぱなもの
+	if _argc == 0 || _argv[0] == 0 {
+		//朝,昼,夕,夜,深夜etc...
+		_slots ,= _time
+		//何時
+		_slots ,= "%(_t[4])hour"
+		//春,夏,秋,冬
+		_slots ,= _season
+		//「春の朝（SpringMorning）」
+		_slots ,= "%(_season)%(_time)"
+		//「朝食時」「昼食時」「夕食時」
+		_slots ,= GetMesiSlot
+		//?月
+		_slots ,= _mts
+		//?月上旬,中旬,下旬
+		_slots ,= "%(GetDaySlot)%(_mts)"
+		//日曜,月曜...
+		_slots ,= _dayofweek
+		//行事
+		_slots ,= _event
+		//行事?曜
+		_slots ,= "%(_dayofweek)%(_event)"
+		//平日休日
+		_slots ,= _holiday
+		//行事・平日休日
+		_slots ,= "%(_holiday)%(_event)"
+		//季節・状態
+		_slots ,= "%(_season)%(_holiday)"
+		//「平日の朝」
+		_slots ,= "%(_holiday)%(_time)"
+	}
+
+	//特定の日付処理は特別
+	if _argc == 0 || _argv[0] == 1 {
+		//誕生日
+		if 今日はユーザー誕生日 {
+			_slots ,= 'ユーザー誕生日'
+		}
+		//?月?日
+		//_slots ,= "%(GetCurrentEto())年%(_m)月%(_d)日"
+		_slots ,= "%(_y)年%(_m)月%(_d)日"
+		_slots ,= "%(_m)月%(_d)日"
+		//?月第?週日曜,月曜...
+		//_slots ,= "%(_m)月第%(((_d - 1) / 7) + 1)週%(_dayofweek)曜"
+	}
+
+	_slots
+}
+
+TalkEval
+{
+	if ISFUNC(_argv[0]) {
+		_var = EVAL(_argv[0])
+		_type = GETTYPE(_var)
+		if _type == 4 {
+			_var
+		}
+		elseif _type == 0 {
+			IARRAY
+		}
+		else {
+			CVSTR(_var)
+			if STRLEN(_var) {
+				(_var,IARRAY)
+			}
+			else {
+				IARRAY
+			}
+		}
+	}
+	else {
+		IARRAY
+	}
+}
+
+ClearRandomTalkArrayNewTalk : void
+{
+	last_new_talk_id_array = IARRAY
+	last_new_talk_array = IARRAY
+}
+
+/*-----------------------------------------------------------------------------
+  トーク高速化処理
+-----------------------------------------------------------------------------*/
+DelayedTalkEval
+{
+	_txtarray = SPLIT(_argv[0],C_CRLF)
+	_output = ''
+
+	if GETTYPE(_txtarray) == 4 {
+		_n = ARRAYSIZE(_txtarray)
+		_inited = 0
+		for _i = 0 ; _i < _n ; _i++ {
+			if _inited {
+				_output += C_CRLF
+			}
+			_inited = 1
+			_output += EVAL(CHR(0x22) + REPLACE(_txtarray[_i],CHR(0x22),'%(CHR(0x22))') + CHR(0x22))
+		}
+	}
+	else {
+		_output += EVAL(CHR(0x22) + REPLACE(_argv[0],CHR(0x22),'%(CHR(0x22))') + CHR(0x22))
+	}
+
+	TOSTR(_output)
+}
+
+/*-----------------------------------------------------------------------------
+  各種情報取得
+-----------------------------------------------------------------------------*/
+GetMonthSlot
+{
+	_m = month
+	_m = _m - 1
+	switch _m {
+		'January'
+		'February'
+		'March'
+		'April'
+		'May'
+		'June'
+		'July'
+		'August'
+		'September'
+		'October'
+		'November'
+		'December'
+	}
+}
+
+GetHolidaySlot
+{
+	//平日・休日
+	switch GETTIME[3] {
+		'Holiday'
+		'Weekday'
+		'Weekday'
+		'Weekday'
+		'Weekday'
+		'Weekday'
+		'Holiday'
+	}
+}
+
+GetDOWSlot
+{
+	//曜日
+	switch GETTIME[3] {
+		'Sunday'
+		'Monday'
+		'Tuesday'
+		'Wednesday'
+		'Thursday'
+		'Friday'
+		'Saturday'
+	}
+}
+
+GetSeasonSlot
+{
+	//季節
+	_m = month
+	case _m {
+		when 3-5    {'Spring'}
+		when 6-8    {'Summer'}
+		when 9-11   {'Autumn'}
+		when 12,1,2 {'Winter'}
+	}
+}
+
+GetTimeSlot
+{
+	//おおざっぱな時間
+	case month {
+		when 1,2 {
+			case hour {
+				when 22,23,0-6 {'Midnight'}
+				when 7-11      {'Morning'}
+				when 12,13     {'Midday'}
+				when 1-17      {'Daytime'}
+				when 18-21     {'Night'}
+			}
+		}
+		when 3,4,8 {
+			case hour {
+				when 22,23,0-5 {'Midnight'}
+				when 6-11      {'Morning'}
+				when 12,13     {'Midday'}
+				when 14-18     {'Daytime'}
+				when 19-21     {'Night'}
+			}
+		}
+		when 5,6,7 {
+			case hour {
+				when 22,23,0-4 {'Midnight'}
+				when 5-11      {'Morning'}
+				when 12,13     {'Midday'}
+				when 14-17     {'Daytime'}
+				when 18-21     {'Night'}
+			}
+		}
+		when 9,10 {
+			case hour {
+				when 22,23,0-5 {'Midnight'}
+				when 6-11      {'Morning'}
+				when 12,13     {'Midday'}
+				when 14-18     {'Daytime'}
+				when 19-21     {'Night'}
+			}
+		}
+		when 11 {
+			case hour {
+				when 22,23,0-6 {'Midnight'}
+				when 7-11      {'Morning'}
+				when 12,13     {'Midday'}
+				when 14-16     {'Daytime'}
+				when 17-21     {'Night'}
+			}
+		}
+		when 12 {
+			case hour {
+				when 22,23,0-7 {'Midnight'}
+				when 8-11      {'Morning'}
+				when 12,13     {'Midday'}
+				when 14-16     {'Daytime'}
+				when 17-21     {'Night'}
+			}
+		}
+	}
+}
+
+GetEventSlot
+{
+	//月をおおざっぱに
+	_m = GETTIME[1]
+	_d = GETTIME[2]
+	//曜日
+	//_dow = GetDOWSlot
+	//第n週
+	//_week = ((_d - 1) / 7) + 1
+
+	//正月
+	if _m == 1 && _d <= 3 {
+		'NewYear'
+		return
+	}
+	//クリスマスイヴ
+	if _m == 12 && _d == 24 {
+		'ChristmasEve'
+		return
+	}
+	//クリスマス
+	if _m == 12 && _d == 25 {
+		'Christmas'
+		return
+	}
+	//年末
+	if _m == 12 && _d <= 31 || _d >= 26 {
+		'YearEnd'
+		return
+	}
+	//標準は仕事
+	'Work'
+}
+
+GetMesiSlot
+{
+	case hour {
+		when 6-8   { 'Breakfast' }
+		when 12,13 { 'Lunch' }
+		when 18-20 { 'Dinner' }
+		others     { IARRAY }
+	}
+}
+
+GetDaySlot
+{
+	case day {
+		when 1-10  { 'Early' }
+		when 11-20 { 'Late' }
+		others     { 'Mid' }
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  選択肢ジャンプ
+-----------------------------------------------------------------------------*/
+OnChoiceSelect
+{
+	_id = reference[0]
+	if ISFUNC(_id) {
+		EVAL(_id)
+	}
+}
+OnChoiceSelectEx
+{
+	_id = reference[1]
+	if ISFUNC(_id) {
+		EVAL(_id)
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  アンカージャンプ
+-----------------------------------------------------------------------------*/
+OnAnchorSelect
+{
+	_id = reference[0]
+	//アンカーのIDの冒頭に「http://〜」があればWebサイトを開く。
+	//これを入れておくとRSS表示時に記事タイトルクリックでURLジャンプできます。
+	if RE_MATCH(_id, 'http://.+') {
+		_url = AYATEMPLATE.EscapeText(_id)
+		"\C\j[%(_url)] \e"
+	//それ以外はIDと同じ名前のイベントへジャンプ
+	} elseif ISFUNC(_id) {
+		EVAL(_id)
+	}
+}
+OnAnchorSelectEx
+{
+	_id = reference[1]
+	//アンカーのIDの冒頭に「http://〜」があればWebサイトを開く。
+	//これを入れておくとRSS表示時に記事タイトルクリックでURLジャンプできます。
+	if RE_MATCH(_id, 'http://.+') {
+		_url = AYATEMPLATE.EscapeText(_id)
+		"\C\j[%(_url)] \e"
+	//それ以外はIDと同じ名前のイベントへジャンプ
+	} elseif ISFUNC(_id) {
+		EVAL(_id)
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  入力ボックス
+  InputBoxに入力したIDと同じ名前のイベントにジャンプ
+-----------------------------------------------------------------------------*/
+OnUserInput
+{
+	EVAL(reference[0])
+}
+
+/*-----------------------------------------------------------------------------
+  ゴーストのロード
+  起動毎の変数の初期化などはここで
+-----------------------------------------------------------------------------*/
+OnGhostLoad
+{
+}
+
+/*-----------------------------------------------------------------------------
+  ゴーストのアンロード
+  起動毎の変数の初期化などはここで
+-----------------------------------------------------------------------------*/
+OnGhostUnload
+{
+	//なで反応で使用する変数の削除
+	ERASEVAR('stroke')
+	ERASEVAR('prev_reference4')
+	ERASEVAR('nade_prev')
+
+	//見切れ・重なりで使用する変数の削除
+	ERASEVAR('mikireflag','mikiretimer')
+	ERASEVAR('kasanariflag','kasanaritimer')
+
+	//最終終了時刻。後で使うかもしれないので記録（省略可）
+	//（長期間起動しなかった時の反応等に）
+	LastCloseTime	= GETTIME
+}
+
+/*-----------------------------------------------------------------------------
+  ランダムトーク
+-----------------------------------------------------------------------------*/
+
+OnAITalk {
+	OnAiTalk
+}
+
+OnAiTalk
+{
+	if CHAIN.IDName == "" {
+		lastTalk = RandomTalk
+	}
+	else {
+		lastTalk = ChainTalk
+	}
+	lastTalk
+}
+
+OnLastTalk {
+	"%(lastTalk)"
+}
+
+/*-----------------------------------------------------------------------------
+  コミュニケート反応
+-----------------------------------------------------------------------------*/
+OnCommunicate
+{
+	if (reference[0]=='user') {
+		ReplyToUser
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  つつき反応　（省略可）
+-----------------------------------------------------------------------------*/
+OnMouseDoubleClick
+{
+	SHIORI3FW.ResetAITalkInterval()
+	EVAL("Click_%(reference[3])%(reference[4])")
+}
+
+/*-----------------------------------------------------------------------------
+  なで反応　（省略可）
+-----------------------------------------------------------------------------*/
+OnMouseMove
+{
+	//なで反応
+	//（文Wiki記載「マウス反応を自然なものにする」を改変）
+	if reference[4] != "" {
+
+		//----どこかが撫でられている
+		if reference[4] == prev_reference4 {
+			_nade_interval = systemuptime - nade_prev
+
+			if _nade_interval > 1 {
+				//1秒以上間隔が空いたらカウンタをリセット
+				stroke = 0
+
+			}
+			nade_prev = systemuptime
+			stroke++
+
+			//撫でられた量が一定量に達したら「なでられている」と判断
+			//（「stroke >= *」の*の値が大きいほど反応が鈍くなる）
+			if stroke >= 50 {
+				//撫でられた。撫でられた部位を見てトークする
+				SHIORI3FW.ResetAITalkInterval()
+				EVAL("Naderu_%(reference[3])%(reference[4])")
+				--
+				stroke = 0
+
+			}
+		}
+		else {
+			stroke = 0
+		}
+		prev_reference4 = reference[4]
+	}
+	else {
+		// 定義された部位はどこも撫でられていない
+		stroke = 0
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  見切れ・重なりイベント
+-----------------------------------------------------------------------------*/
+MikireKasanari
+{
+	//見切れ反応（メインキャラ見切れ5秒後）
+	if reference[1] && !mikireflag {
+		mikiretimer--
+		if mikiretimer < 1 {
+			mikireflag = 1
+			mikireStartTalk
+		}
+	}
+	else {
+		mikiretimer = 5
+	}
+
+	//見切れ終了反応（見切れ終了直後）
+	if mikireflag && !reference[1] {
+		mikireflag = 0
+		mikireEndTalk
+	}
+
+	//重なり反応（メインとサブキャラの重なり5秒後）
+	elseif !kasanariflag && reference[2] {
+
+		if ISVAR('kasanaritimer') == 0 {
+			kasanaritimer = 5
+		}
+
+		kasanaritimer--
+		if kasanaritimer < 1 {
+			kasanariflag = 1
+			kasanariStartTalk
+		}
+	}
+	//重なり終了反応（重なり終了直後）
+	elseif kasanariflag && !reference[2] {
+		kasanariflag = 0
+		kasanaritimer = 5
+		kasanariEndTalk
+	}
+	else {
+		kasanaritimer = 5
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  サーフィス戻し
+  緩衝付き
+-----------------------------------------------------------------------------*/
+OnSurfaceRestore
+{
+	case reference[0] {
+		when 17-19,200-210 {
+			SHIORI3FW.SetDelayEvent('OnSurfaceRestore',30)
+			--
+			'\1\s[10]\0\s[6]\e'
+		}
+		others {
+			'\1\s[10]\0\s[0]\e'
+		}
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  バルーンツールチップ　（省略可）
+-----------------------------------------------------------------------------*/
+On_balloon_tooltip
+{
+	if ISFUNC("BalloonTooltip_%(reference[0])") {
+		EVAL("BalloonTooltip_%(reference[0])")
+	}
+}
+
+/*-----------------------------------------------------------------------------
+  シェルツールチップ　（省略可）
+-----------------------------------------------------------------------------*/
+AYATEMPLATE.MouseEventExec
+{
+  _fname = _argv[0] + TOSTR(reference[3]) + TOSTR(reference[4])
+  if ISFUNC(_fname) {
+    EVAL(_fname)
+    return
+  }
+
+  _fname = _argv[0] + TOSTR(reference[3])
+  if ISFUNC(_fname) {
+    EVAL(_fname)
+    return
+  }
+}
+
+On_tooltip
+{
+  AYATEMPLATE.MouseEventExec('tooltip')
+}

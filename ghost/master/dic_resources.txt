@@ -1,0 +1,110 @@
+/*=============================================================================
+  Masaki Chikashi Ghost Templates
+  リソース辞書
+  Last up date: 2018/03/15
+=============================================================================*/
+
+/*-----------------------------------------------------------------------------
+  ネットワーク更新
+-----------------------------------------------------------------------------*/
+On_homeurl { 'http://chikashi.org/nanika/update/ghost/mitaraiyuzu/' }
+
+/*-----------------------------------------------------------------------------
+  ネットワーク更新時のファイル数の開始数値
+-----------------------------------------------------------------------------*/
+On_useorigin1 { '0' }
+
+/*-----------------------------------------------------------------------------
+  ユーザーの名称
+-----------------------------------------------------------------------------*/
+On_username { userName }
+
+/*-----------------------------------------------------------------------------
+  キャプション系
+-----------------------------------------------------------------------------*/
+On_vanishbutton.visible { '1' }
+
+On_sakura.recommendbuttoncaption { '配布元' }
+On_sakura.portalbuttoncaption { 'ブックマーク' }
+On_updatebuttoncaption { 'ネットワーク更新' }
+On_vanishbuttoncaption {
+	'捨てる'
+	'今日は生ごみの日だ'
+	'飽きた'
+}
+On_readmebuttoncaption { '取扱説明書' }
+
+/*-----------------------------------------------------------------------------
+  配布元
+-----------------------------------------------------------------------------*/
+On_sakura.recommendsites
+{"/
+	『芋虫病』 配布ページ%(CHR(1))/
+	http://chikashi.org/ukagaka/ghost/mitaraiyuzu%(CHR(2))/
+
+	-%(CHR(1))/
+	%(CHR(2))/
+
+	バグ報告・感想%(CHR(1))/
+	http://chikashi.org/askme/%(CHR(2))/
+
+	更新履歴%(CHR(1))/
+	http://chikashi.org/ukagaka/update-history/%(CHR(2))/
+
+	Anchoring（作者サイト）%(CHR(1))/
+	http://chikashi.org/%(CHR(2))/
+"}
+
+/*-----------------------------------------------------------------------------
+  ブックマーク更新
+-----------------------------------------------------------------------------*/
+On_sakura.portalsites
+{"/
+	伺かのあそびかた%(CHR(1))/
+	http://haka.sakura.ne.jp/guide/%(CHR(2))/
+
+	ばぐとら研究所%(CHR(1))/
+	http://ssp.shillest.net/%(CHR(2))/
+
+	-%(CHR(1))/
+	%(CHR(2))/
+
+	伺かゴーストセンター%(CHR(1))/
+	http://ngc.sherry.jp/%(CHR(2))/
+
+	GHOST TOWN%(CHR(1))/
+	http://ghosttown.mikage.jp/%(CHR(2))/
+
+	BALLOON TOWN%(CHR(1))/
+	http://ghosttown.mikage.jp/balloontown.html%(CHR(2))/
+
+	-%(CHR(1))/
+	%(CHR(2))/
+
+	Disc-2%(CHR(1))/
+	http://disc2.s56.xrea.com/%(CHR(2))/
+
+	噂と評判［改］%(CHR(1))/
+	http://review.sakura.ne.jp/%(CHR(2))/
+
+	ゴースト回覧板%(CHR(1))/
+	http://jbbs.livedoor.jp/computer/12782/%(CHR(2))/
+
+	-%(CHR(1))/
+	%(CHR(2))/
+
+	伺か統合リンク%(CHR(1))/
+	http://priest.so.land.to/nisesakura/index2.html%(CHR(2))/
+
+	UKADOC Poroject%(CHR(1))/
+	http://ukadoc.googlecode.com/svn/trunk/manual/index.html%(CHR(2))/
+
+	駄でべろぱの小ネタWiki%(CHR(1))/
+	http://emily.shillest.net/specwiki/%(CHR(2))/
+
+	文Wiki「文屋」%(CHR(1))/
+	http://emily.shillest.net/ayaya/index.php?FrontPage%(CHR(2))/
+
+	balloonのつくりかたマニュアル%(CHR(1))/
+	http://happen.kotonet.com/make_balloon.html%(CHR(2))/
+"}

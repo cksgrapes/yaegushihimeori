@@ -1,0 +1,4 @@
+charset,UTF-8
+name,週末は、きみの部屋で。
+type,ghost
+directory,yaegushihimeori
