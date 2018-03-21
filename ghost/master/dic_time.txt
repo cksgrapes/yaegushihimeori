@@ -31,11 +31,11 @@ OnMinuteChange
 			--
 			case hour {
 				when 13 {
-					'ウン、お腹すいた。'
+					"ウン、お腹すいた。"
 				}
 			}
 			--
-			'\e'
+			"\e"
 		}
 	}
 }
@@ -48,7 +48,7 @@ event_ユーザ誕生日
 	if ( EVAL('UserHBD' + year) != 1 ) {
 		LETTONAME( 'UserHBD' + year , 1 )
 		--
-		'\1\s[10]\0\s[0]誕生日だね。おめでと。\n\n[half]これからもアンタがアタシを捨てないでいてくれますように。あと、アンタが芋虫病にかかりませんように。\n\n[half]……アレ、違った？\e'
+		"\1\s[10]\0\s[0]誕生日だね。おめでと。\n\n[half]これからもアンタがアタシを捨てないでいてくれますように。あと、アンタが芋虫病にかかりませんように。\n\n[half]……アレ、違った？\e"
 	} else {
 		case SHIORI3FW.Eventid {
 			when 'OnBoot' {

@@ -42,8 +42,10 @@ AYATEMPLATE.EscapeText
 #globaldefine </u> \f[underline,false]
 #globaldefine <i> \f[italic,true]
 #globaldefine </i> \f[italic,false]
-#globaldefine @checkOn \_u[0x2611]
-#globaldefine @checkOff \_u[0x2610]
+//#globaldefine @checkOn \_u[0x2611]
+//#globaldefine @checkOff \_u[0x2610]
+#globaldefine @checkOn ◉
+#globaldefine @checkOff ○
 
 #globaldefine @line ----------------------------------------
 
@@ -93,10 +95,24 @@ TextOnlyTranslatorFunc
 	_text
 }
 
+
+/*-----------------------------------------------------------------------------
+  メニュー横1行反転
+-----------------------------------------------------------------------------*/
+MENUITEM
+{
+	_menuitem = _argv[0]
+	for _i = GETSTRBYTES(_menuitem) ; _i < 48 ; _i++
+	{
+		_menuitem += " "
+	}
+	_menuitem
+}
+
 /*-----------------------------------------------------------------------------
  ユーザ誕生日取得
 -----------------------------------------------------------------------------*/
-UserBirthdaySet {
+SetUserBirthday {
 	_i = SPLIT(userbd,'/')
 	userBDmonth = _i[0]
 	userBDday = _i[1]
