@@ -4,8 +4,16 @@
   Last up date: 2018/03/15
 =============================================================================*/
 
-Cancel {
-	"\1\b[-1]\0\b[-1]\![close,inputbox,__SYSTEM_ALL_INPUT__]\e"
+/*-----------------------------------------------------------------------------
+  InputBoxキャンセル時の処理
+-----------------------------------------------------------------------------*/
+OnUserInputCancel {
+    if (reference[1] == 'close') {
+    // バツボタンでCloseされたとき
+        case reference[0] {
+            when 'OnInputUsername','OnInputUserFirstPerson','OnInputUserBirthday' { Setting }
+        }
+    }
 }
 
 /*-----------------------------------------------------------------------------
@@ -19,6 +27,7 @@ Setting {
 	<b>[誕生日]</b> \q[%(userBDmonth)/%(userBDday),UserBirthdayEntry]　/
 	<b>[性別]</b> %(choose_user_gender)\n\n[half]/
 	<b>[喋り頻度]</b> %(choose_talk_interval)\n\n[half]/
+	<b>[未対応コミュワード送信]</b> %(choose_send_saidword)\n\n[half]/
 	%*\q[%(MENUITEM('Close')),Cancel]\e"
 }
 
@@ -26,59 +35,46 @@ Setting {
   名前を教える
 -----------------------------------------------------------------------------*/
 UserNameEntry {
-	beforeusername = username
-	"\1\s[10]\_q（呼ばれたい名前を入力してください。敬称を含む場合は、敬称も込みで入力してください）\_q\_w[1000]\![open,inputbox,OnInputUsername,-1]\e"
+	"\1\s[10]\_q（呼ばれたい名前を入力してください。敬称を含む場合は、敬称も込みで入力してください）\_q\_w[500]\![open,inputbox,OnInputUsername,-1]\e"
 }
 
 OnInputUsername {
 	_content = EscapeDangerousTags(reference[0])
-	if (_content == '') {
-		username = beforeusername
-		Setting
-	} else {
+	if (_content != '') {
 		username = _content
-		Setting
 	}
+    Setting
 }
 
 /*-----------------------------------------------------------------------------
   一人称を教える
 -----------------------------------------------------------------------------*/
 UserFirstPersonEntry {
-	beforeuserfp = userfp
-	"\1\s[10]\_q（あなたの一人称を入力してください）\_q\_w[1000]\![open,inputbox,OnInputUserFirstPerson,-1]\e"
+	"\1\s[10]\_q（あなたの一人称を入力してください）\_q\_w[500]\![open,inputbox,OnInputUserFirstPerson,-1]\e"
 }
 
 OnInputUserFirstPerson {
 	_content = EscapeDangerousTags(reference[0])
-	if (_content == '') {
-		userfp = beforeuserfp
-		Setting
-	} else {
+    if (_content != '') {
 		userfp = _content
-		Setting
 	}
+	Setting
 }
 
 /*-----------------------------------------------------------------------------
   誕生日を教える
 -----------------------------------------------------------------------------*/
 UserBirthdayEntry {
-	beforeuserbd = userbd
-	"\1\s[10]\_q（あなたの誕生日を 1/1 や 12/31 のような形式を用いて、半角で入力してください）\_q\_w[1000]\![open,inputbox,OnInputUserBirthday,-1]\e"
+	"\1\s[10]\_q（あなたの誕生日を 1/1 や 12/31 のような形式を用いて、半角で入力してください）\_q\_w[500]\![open,inputbox,OnInputUserBirthday,-1]\e"
 }
 
 OnInputUserBirthday {
 	_content = EscapeDangerousTags(reference[0])
-	if (_content == '') {
-		userbd = beforeuserbd
-		SetUserBirthday
-		Setting
-	} else {
+	if (_content != '') {
 		userbd = _content
 		SetUserBirthday
-		Setting
 	}
+    Setting
 }
 
 /*-----------------------------------------------------------------------------
@@ -97,7 +93,7 @@ SetUserGender_その他 {
 }
 
 SetUserGender {
-    usergender         = _argv[0]
+    usergender = _argv[0]
     choose_user_gender = GetGenderChoices(_argv[0])
 
     Setting
@@ -134,18 +130,45 @@ SetTalkInterval_黙 {
 }
 
 SetTalkInterval {
-    aitalkinterval       = _argv[0]
-    choose_talk_interval = GetTalkInterval(_argv[1])
+    aitalkinterval = _argv[0]
+    choose_talk_interval = GetTalkIntervalChoices(_argv[1])
 
     Setting
 }
 
-GetTalkInterval {
+GetTalkIntervalChoices {
     _name = "高,中,低,稀,黙"
     _func = 'SetTalkInterval'
     GetChoices(_name,_func,_argv[0])
 }
 
+/*-----------------------------------------------------------------------------
+  コミュワード送信を選択する
+-----------------------------------------------------------------------------*/
+SetSendSaidWord_する {
+    SetSendSaidWord('する')
+}
+
+SetSendSaidWord_しない {
+    SetSendSaidWord('しない')
+}
+
+SetSendSaidWord {
+    if (_argv[0] == 'する') {
+      sendsaidword = 1
+    } else {
+      sendsaidword = 0
+    }
+    choose_send_saidword = GetSendSaidWordChoices(_argv[0])
+
+    Setting
+}
+
+GetSendSaidWordChoices {
+    _name = "する,しない"
+    _func = 'SetSendSaidWord'
+    GetChoices(_name,_func,_argv[0])
+}
 
 /*-----------------------------------------------------------------------------
   選択肢のリストを取得する

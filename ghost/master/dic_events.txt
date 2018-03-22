@@ -12,6 +12,7 @@ OnKeyPress
 	case reference[0] {
 		when 'return' {
 			OnAITalk
+//            Communicate
 		}
 		when 'back' {
 			OnLastTalk

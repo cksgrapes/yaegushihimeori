@@ -7,10 +7,9 @@
 Click_0
 {
 //    Test
-//SetTalkInterval_高
-    Setting
+//    Setting
 //	OnAITalk
-//    GetTalkInterval('低')
+    Communicate
 }
 
 /*-----------------------------------------------------------------------------

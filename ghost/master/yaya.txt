@@ -30,6 +30,7 @@ dic, dic_utilities.txt   //ユーティリティ辞書
 
 dic, dic_bootend.txt     //起動終了トーク辞書
 dic, dic_talk.txt        //ランダムトーク辞書
+dic, dic_communicate.txt //コミュニケート辞書
 dic, dic_mouse.txt       //触り反応辞書
 dic, dic_menu.txt        //メニュー辞書
 dic, dic_time.txt        //日時イベント辞書

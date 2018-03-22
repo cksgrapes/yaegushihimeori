@@ -31,11 +31,12 @@ InitVar
 	usergender    = '男'
 	userfp        = '私'
 	userbd        = '1/1'
+	sendsaidword  = 0
 	firstboottime = GETTIME
 
-	choose_user_gender    = GetGenderChoices('男')
-	choose_talk_interval  = GetTalkInterval('低')
-//	choiceCommuWordSent = '@checkOnする @checkOff\q[しない,ChoiceCommuWordSentNG]'
+	choose_user_gender   = GetGenderChoices('男')
+	choose_talk_interval = GetTalkIntervalChoices('低')
+	choose_send_saidword = GetSendSaidWordChoices('する')
 
 	SetUserBirthday
 }

@@ -117,3 +117,48 @@ SetUserBirthday {
 	userBDmonth = _i[0]
 	userBDday = _i[1]
 }
+
+/*-----------------------------------------------------------------------------
+  バルーンや入力ボックスなどを閉じる
+-----------------------------------------------------------------------------*/
+Cancel {
+	"\1\b[-1]\0\b[-1]\![close,inputbox,__SYSTEM_ALL_INPUT__]\e"
+}
+
+/*-----------------------------------------------------------------------------
+  フィードバック送信コア
+-----------------------------------------------------------------------------*/
+InputFeedback {
+	"\1\s[10]\_q（%(_argv[0])）\_q\_w[500]\![open,inputbox,%(_argv[1]),-1]\e"
+}
+
+ConfirmFeedback {
+	_content = EscapeDangerousTags(_argv[0])
+	if (_content == '') {
+		"\1\s[10]\_q（何も入力されていません）\_q\e"
+	} else {
+		"\1\s[10]\_q（%(_argv[1])）\_q\n[200%]/
+		\_q「%(_content)」\_q\n[200%]/
+		<b>[\q[送信する,%(_argv[2]),%(_content)]]　[\q[キャンセル,CancelSendFeedback]]</b>\e"
+	}
+}
+
+SendFeedback {
+	_content    = _argv[0]
+	_systempath = 'http://chikashi.org/nanika/feedback/wywue3ugz5.php'
+	_ghostname  = SHIORI3FW.GhostName
+	_sakuraname = "%selfname"
+	_category   = _argv[1]
+	_id         = _argv[2]
+
+	"\1\s[10]\![execute,http-post,%(_systempath),--async=%(_id),--nodescript,--file=%(CHR(0x22))feedback.log%(CHR(0x22)),--param=ghostname=%(_ghostname)&sakuraname=%(_sakuraname)&category=%(_category)&message=%(_content),--timeout=5]\e"
+}
+
+SendFeedbackFailure {
+  "\1\s[10]\_q（送信に失敗しました）\_q\e"
+}
+
+CancelSendFeedback {
+	"\1\s[10]\_q（キャンセルしました）\_q\e"
+}
+
