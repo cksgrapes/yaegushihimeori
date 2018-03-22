@@ -9,7 +9,13 @@ Click_0
 //    Test
 //    Setting
 //	OnAITalk
-    Communicate
+//    Communicate
+//Test
+//love = 0
+//--
+//AdjustEmotion('hate','++')
+//--
+GetMoodSlot
 }
 
 /*-----------------------------------------------------------------------------

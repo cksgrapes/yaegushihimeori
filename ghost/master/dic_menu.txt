@@ -5,18 +5,6 @@
 =============================================================================*/
 
 /*-----------------------------------------------------------------------------
-  InputBoxキャンセル時の処理
------------------------------------------------------------------------------*/
-OnUserInputCancel {
-    if (reference[1] == 'close') {
-    // バツボタンでCloseされたとき
-        case reference[0] {
-            when 'OnInputUsername','OnInputUserFirstPerson','OnInputUserBirthday' { Setting }
-        }
-    }
-}
-
-/*-----------------------------------------------------------------------------
   ユーザ設定
 -----------------------------------------------------------------------------*/
 Setting {
@@ -28,32 +16,35 @@ Setting {
 	<b>[性別]</b> %(choose_user_gender)\n\n[half]/
 	<b>[喋り頻度]</b> %(choose_talk_interval)\n\n[half]/
 	<b>[未対応コミュワード送信]</b> %(choose_send_saidword)\n\n[half]/
-	%*\q[%(MENUITEM('Close')),Cancel]\e"
+	%*\q[フィードバックを送る,OnInputFeedback]\n\n[half]/
+	%*\q[閉じる,Cancel]\e"
 }
 
 /*-----------------------------------------------------------------------------
   名前を教える
 -----------------------------------------------------------------------------*/
 UserNameEntry {
-	"\1\s[10]\_q（呼ばれたい名前を入力してください。敬称を含む場合は、敬称も込みで入力してください）\_q\_w[500]\![open,inputbox,OnInputUsername,-1]\e"
+	"\1\s[10]\_q（呼ばれたい名前を入力してください。敬称を含む場合は、敬称も込みで入力してください）\_q\_w[500]\![open,inputbox,OnUsernameInput,-1]\e"
 }
 
-OnInputUsername {
+OnUsernameInput {
 	_content = EscapeDangerousTags(reference[0])
 	if (_content != '') {
 		username = _content
 	}
-    Setting
+  Setting
 }
+
+OnUsernameInputCancel { Setting }
 
 /*-----------------------------------------------------------------------------
   一人称を教える
 -----------------------------------------------------------------------------*/
 UserFirstPersonEntry {
-	"\1\s[10]\_q（あなたの一人称を入力してください）\_q\_w[500]\![open,inputbox,OnInputUserFirstPerson,-1]\e"
+	"\1\s[10]\_q（あなたの一人称を入力してください）\_q\_w[500]\![open,inputbox,OnUserFPInput,-1]\e"
 }
 
-OnInputUserFirstPerson {
+OnUserFPInput {
 	_content = EscapeDangerousTags(reference[0])
     if (_content != '') {
 		userfp = _content
@@ -61,21 +52,25 @@ OnInputUserFirstPerson {
 	Setting
 }
 
+OnUserFPInputCancel { Setting }
+
 /*-----------------------------------------------------------------------------
   誕生日を教える
 -----------------------------------------------------------------------------*/
 UserBirthdayEntry {
-	"\1\s[10]\_q（あなたの誕生日を 1/1 や 12/31 のような形式を用いて、半角で入力してください）\_q\_w[500]\![open,inputbox,OnInputUserBirthday,-1]\e"
+	"\1\s[10]\_q（あなたの誕生日を 1/1 や 12/31 のような形式を用いて、半角で入力してください）\_q\_w[500]\![open,inputbox,OnUserBDInput,-1]\e"
 }
 
-OnInputUserBirthday {
+OnUserBDInput {
 	_content = EscapeDangerousTags(reference[0])
 	if (_content != '') {
 		userbd = _content
 		SetUserBirthday
 	}
-    Setting
+	Setting
 }
+
+OnUserBDInputCancel { Setting }
 
 /*-----------------------------------------------------------------------------
   ユーザ性別を設定する
@@ -146,20 +141,16 @@ GetTalkIntervalChoices {
   コミュワード送信を選択する
 -----------------------------------------------------------------------------*/
 SetSendSaidWord_する {
-    SetSendSaidWord('する')
+    SetSendSaidWord(1,'する')
 }
 
 SetSendSaidWord_しない {
-    SetSendSaidWord('しない')
+    SetSendSaidWord(0,'しない')
 }
 
 SetSendSaidWord {
-    if (_argv[0] == 'する') {
-      sendsaidword = 1
-    } else {
-      sendsaidword = 0
-    }
-    choose_send_saidword = GetSendSaidWordChoices(_argv[0])
+    sendsaidword = _argv[0]
+    choose_send_saidword = GetSendSaidWordChoices(_argv[1])
 
     Setting
 }

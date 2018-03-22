@@ -39,6 +39,11 @@ InitVar
 	choose_send_saidword = GetSendSaidWordChoices('する')
 
 	SetUserBirthday
+	SetMood
+}
+
+SetMood {
+  mood = RAND(10)+1
 }
 
 /*-----------------------------------------------------------------------------
@@ -47,6 +52,8 @@ InitVar
 
 FirstBootTalk
 {
+  InitVar
+  --
 	"\t\1\s[10]\0\s[0]"
 	--
 	"初回起動トーク。"
@@ -57,10 +64,12 @@ FirstBootTalk
 /*-----------------------------------------------------------------------------
   起動
 -----------------------------------------------------------------------------*/
+OnInitialize {
+  SetMood
+}
+
 OnBoot : nonoverlap
 {
-    InitVar
-
 	if ( month == userBDmonth && day == userBDday )
 	{
 		event_ユーザ誕生日

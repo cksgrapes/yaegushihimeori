@@ -49,11 +49,11 @@ RandomTalkEx : nonoverlap
 RandomTalkArrayNewTalk
 {
 	_talknew_func = IARRAY
-	_talknew_func ,= 'AddNew.TalkNormal'
+	_talknew_func ,= 'New.NormalTalk'
 	_earray = GetEvalTalkArray
 	_n = ARRAYSIZE(_earray)
 	for _i = 0 ; _i < _n ; _i++ {
-		_talknew_func ,= 'AddNew.Talk' + _earray[_i]
+		_talknew_func ,= 'New.NormalTalk_' + _earray[_i]
 	}
 
 	if ISVAR('last_new_talk_id_array') == 0 {
@@ -100,13 +100,13 @@ RandomTalkArrayNewTalk
 		last_new_talk_array[_rand] = IARRAY
 		return
 	}
-	RandomTalkArrayEx
+	RandomTalkArray
 }
 
 RandomTalkArray
 {
 	_talk    = IARRAY
-	_talknew = TalkEval('AddNew.TalkNormal')
+	_talknew = TalkEval('New.NormalTalk')
 	_n       = ARRAYSIZE(_talknew)
 	if _n >= 2 { //1行目は日付
 		_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
@@ -115,70 +115,70 @@ RandomTalkArray
 	_earray = GetEvalTalkArray
 	_n = ARRAYSIZE(_earray)
 	for _i = 0 ; _i < _n ; _i++ {
-		_talknew = TalkEval('AddNew.Talk' + _earray[_i])
+		_talknew = TalkEval('New.NormalTalk_' + _earray[_i])
 		_tnum = ARRAYSIZE(_talknew)
 		if _tnum >= 2 { //1行目は日付
 			_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
 		}
 
-		_talk ,= TalkEval('Talk' + _earray[_i])
+		_talk ,= TalkEval('NormalTalk_' + _earray[_i])
 	}
 	//そしてこれがふつう
-	_talk ,= TalkEval('TalkNormal')
+	_talk ,= TalkEval('NormalTalk')
 
 	_talk
 }
 
-RandomTalkArrayEx
-{
-	_talk    = IARRAY
-	_talknew = TalkEval('AddNew.TalkNormal')
-	_n       = ARRAYSIZE(_talknew)
-	if _n >= 2 { //1行目は日付
-		_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
-	}
-	//季節その他
-	_earray = GetEvalTalkArray
-	_n = ARRAYSIZE(_earray)
-	for _i = 0 ; _i < _n ; _i++ {
-		_talknew = TalkEval('AddNew.Talk' + _earray[_i])
-		_tnum = ARRAYSIZE(_talknew)
-		if _tnum >= 2 { //1行目は日付
-			_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
-		}
-
-		_talk ,= TalkEval('Talk' + _earray[_i])
-	}
-	//そしてこれがふつう
-	_talk ,= TalkEval('TalkNormal')
-
-	_cond    = GetConditionArray
-	_cnum    = ARRAYSIZE(_cond)
-
-	for _i = 0 ; _i < _cnum ; _i++ {
-		_talknew = TalkEval('AddNew.TalkNormal.' + _cond[_i])
-		_n       = ARRAYSIZE(_talknew)
-		if _n >= 2 { //1行目は日付
-			_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
-		}
-		//季節その他
-		_earray = GetEvalTalkArray
-		_n = ARRAYSIZE(_earray)
-		for _j = 0 ; _j < _n ; _j++ {
-			_talknew = TalkEval('AddNew.Talk' + _earray[_j] + '.' + _cond[_i])
-			_tnum = ARRAYSIZE(_talknew)
-			if _tnum >= 2 { //1行目は日付
-				_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
-			}
-
-			_talk ,= TalkEval('Talk' + _earray[_j] + '.' + _cond[_i])
-		}
-		//そしてこれがふつう
-		_talk ,= TalkEval('TalkNormal.' + _cond[_i])
-	}
-
-	_talk
-}
+//RandomTalkArrayEx
+//{
+//	_talk    = IARRAY
+//	_talknew = TalkEval('AddNew.TalkNormal')
+//	_n       = ARRAYSIZE(_talknew)
+//	if _n >= 2 { //1行目は日付
+//		_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
+//	}
+//	//季節その他
+//	_earray = GetEvalTalkArray
+//	_n = ARRAYSIZE(_earray)
+//	for _i = 0 ; _i < _n ; _i++ {
+//		_talknew = TalkEval('AddNew.Talk' + _earray[_i])
+//		_tnum = ARRAYSIZE(_talknew)
+//		if _tnum >= 2 { //1行目は日付
+//			_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
+//		}
+//
+//		_talk ,= TalkEval('Talk' + _earray[_i])
+//	}
+//	//そしてこれがふつう
+//	_talk ,= TalkEval('TalkNormal')
+//
+//	_cond    = GetConditionArray
+//	_cnum    = ARRAYSIZE(_cond)
+//
+//	for _i = 0 ; _i < _cnum ; _i++ {
+//		_talknew = TalkEval('AddNew.TalkNormal.' + _cond[_i])
+//		_n       = ARRAYSIZE(_talknew)
+//		if _n >= 2 { //1行目は日付
+//			_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
+//		}
+//		//季節その他
+//		_earray = GetEvalTalkArray
+//		_n = ARRAYSIZE(_earray)
+//		for _j = 0 ; _j < _n ; _j++ {
+//			_talknew = TalkEval('AddNew.Talk' + _earray[_j] + '.' + _cond[_i])
+//			_tnum = ARRAYSIZE(_talknew)
+//			if _tnum >= 2 { //1行目は日付
+//				_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
+//			}
+//
+//			_talk ,= TalkEval('Talk' + _earray[_j] + '.' + _cond[_i])
+//		}
+//		//そしてこれがふつう
+//		_talk ,= TalkEval('TalkNormal.' + _cond[_i])
+//	}
+//
+//	_talk
+//}
 
 GetEvalTalkArray
 {
@@ -190,6 +190,7 @@ GetEvalTalkArray
 	_event     = GetEventSlot
 	_holiday   = GetHolidaySlot
 	_dayofweek = GetDOWSlot
+	_mood      = GetMoodSlot
 
 	_season = GetSeasonSlot
 	_time   = GetTimeSlot
@@ -226,6 +227,8 @@ GetEvalTalkArray
 		_slots ,= "%(_season)%(_holiday)"
 		//「平日の朝」
 		_slots ,= "%(_holiday)%(_time)"
+    //機嫌
+		_slots ,= "%(_mood)"
 	}
 
 	//特定の日付処理は特別
@@ -480,6 +483,15 @@ GetDaySlot
 	}
 }
 
+GetMoodSlot
+{
+  case mood {
+    when 1,2 { 'Nervous' }
+    when 3,4 { 'High' }
+    others   { IARRAY }
+  }
+}
+
 /*-----------------------------------------------------------------------------
   選択肢ジャンプ
 -----------------------------------------------------------------------------*/
@@ -716,7 +728,7 @@ OnSurfaceRestore
 }
 
 /*-----------------------------------------------------------------------------
-  バルーンツールチップ　（省略可）
+  バルーンツールチップ
 -----------------------------------------------------------------------------*/
 On_balloon_tooltip
 {
@@ -726,7 +738,7 @@ On_balloon_tooltip
 }
 
 /*-----------------------------------------------------------------------------
-  シェルツールチップ　（省略可）
+  シェルツールチップ
 -----------------------------------------------------------------------------*/
 AYATEMPLATE.MouseEventExec
 {
@@ -746,4 +758,19 @@ AYATEMPLATE.MouseEventExec
 On_tooltip
 {
   AYATEMPLATE.MouseEventExec('tooltip')
+}
+
+/*-----------------------------------------------------------------------------
+  入力ボックスキャンセル
+-----------------------------------------------------------------------------*/
+OnUserInputCancel
+{
+  _id = reference[0]
+  if reference[1] == 'close' {
+  // バツボタンでCloseされたとき
+    _id = _id+'Cancel'
+    if ISFUNC(_id) {
+      EVAL(_id)
+    }
+  }
 }

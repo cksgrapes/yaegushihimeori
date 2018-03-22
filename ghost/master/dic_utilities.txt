@@ -42,8 +42,6 @@ AYATEMPLATE.EscapeText
 #globaldefine </u> \f[underline,false]
 #globaldefine <i> \f[italic,true]
 #globaldefine </i> \f[italic,false]
-//#globaldefine @checkOn \_u[0x2611]
-//#globaldefine @checkOff \_u[0x2610]
 #globaldefine @checkOn ◉
 #globaldefine @checkOff ○
 
@@ -95,20 +93,6 @@ TextOnlyTranslatorFunc
 	_text
 }
 
-
-/*-----------------------------------------------------------------------------
-  メニュー横1行反転
------------------------------------------------------------------------------*/
-MENUITEM
-{
-	_menuitem = _argv[0]
-	for _i = GETSTRBYTES(_menuitem) ; _i < 48 ; _i++
-	{
-		_menuitem += " "
-	}
-	_menuitem
-}
-
 /*-----------------------------------------------------------------------------
  ユーザ誕生日取得
 -----------------------------------------------------------------------------*/
@@ -123,6 +107,37 @@ SetUserBirthday {
 -----------------------------------------------------------------------------*/
 Cancel {
 	"\1\b[-1]\0\b[-1]\![close,inputbox,__SYSTEM_ALL_INPUT__]\e"
+}
+
+/*-----------------------------------------------------------------------------
+  フィードバックを送る
+-----------------------------------------------------------------------------*/
+OnInputFeedback {
+  _content = "ご意見ご感想など、フィードバックをお待ちしております"
+  _id      = 'OnConfirmFeedback'
+	InputFeedback(_content,_id)
+}
+
+OnConfirmFeedback {
+  _ref     = reference[0]
+  _content = "以下の内容で送信されます"
+  _id      = 'OnSendFeedback'
+  ConfirmFeedback(_ref,_content,_id)
+}
+
+OnSendFeedback {
+  _content = reference[0]
+  _category = 'フィードバック'
+  _id = 'OnExecuteSendFeedback'
+  SendFeedback(_content,_category,_id)
+}
+
+OnExecuteSendFeedback {
+  "\1\s[10]\_q（台詞を送信しました。次回の更新をお待ちください）\_q\e"
+}
+
+OnExecuteSendFeedbackFailure {
+  SendFeedbackFailure
 }
 
 /*-----------------------------------------------------------------------------
@@ -160,5 +175,49 @@ SendFeedbackFailure {
 
 CancelSendFeedback {
 	"\1\s[10]\_q（キャンセルしました）\_q\e"
+}
+
+/*-----------------------------------------------------------------------------
+  感情値調整
+-----------------------------------------------------------------------------*/
+AdjustEmotion {
+  _emotionname = _argv[0]
+
+  //変数がなかった場合、作成する
+  if (ISVAR(_emotionname) == 0) {
+    LETTONAME(_emotionname,0)
+  }
+
+  _level = STRLEN(_argv[1])
+  _value = 0
+
+  case _level {
+    when 1 { _value = 10 }
+    when 2 { _value = 20 }
+    when 3 { _value = 30 }
+  }
+
+  if ('+' _in_ _argv[1]) {
+    LETTONAME(_emotionname,EVAL(_emotionname)+_value)
+  } else {
+    LETTONAME(_emotionname,EVAL(_emotionname)-_value)
+  }
+
+  RoundEmotion(_emotionname,EVAL(_emotionname),0,500)
+}
+
+/*-----------------------------------------------------------------------------
+  感情値を丸める
+-----------------------------------------------------------------------------*/
+RoundEmotion {
+  _emotionname = _argv[0]
+  _value       = _argv[1]
+  _minimum     = _argv[2]
+  _highest     = _argv[3]
+
+  //最低値以下だった場合、最低値に丸める
+  if (_value < _minimum) { LETTONAME(_emotionname,_minimum) }
+  //最高値以上だった場合、最高値に丸める
+  if (_value > _highest) { LETTONAME(_emotionname,_highest) }
 }
 
