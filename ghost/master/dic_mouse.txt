@@ -13,8 +13,9 @@ Click_0
 //Test
 //love = 0
 //--
-//AdjustEmotion('hate','++')
+//AdjustEmotion('love','---')
 //--
+//"love:%(love) mode:%(mode)"
 GetMoodSlot
 }
 

@@ -178,7 +178,21 @@ CancelSendFeedback {
 }
 
 /*-----------------------------------------------------------------------------
-  感情値調整
+  気分を設定
+-----------------------------------------------------------------------------*/
+/*
+実際に気分を返すのはGetMoodSlot。
+1/5の確率でHigh
+1/5の確率でNervous
+3/5の確率でNormal
+*/
+SetMood {
+  mood = RAND(10)+1
+}
+
+/*-----------------------------------------------------------------------------
+  感情値調整（--- 〜 +++）
+  Ex: AdjustEmotion('love','++')
 -----------------------------------------------------------------------------*/
 AdjustEmotion {
   _emotionname = _argv[0]
@@ -203,6 +217,7 @@ AdjustEmotion {
     LETTONAME(_emotionname,EVAL(_emotionname)-_value)
   }
 
+  //下限値0, 上限値500
   RoundEmotion(_emotionname,EVAL(_emotionname),0,500)
 }
 
@@ -219,5 +234,16 @@ RoundEmotion {
   if (_value < _minimum) { LETTONAME(_emotionname,_minimum) }
   //最高値以上だった場合、最高値に丸める
   if (_value > _highest) { LETTONAME(_emotionname,_highest) }
+}
+
+/*-----------------------------------------------------------------------------
+  感情値チェック
+-----------------------------------------------------------------------------*/
+CheckEmotion {
+  if (love > 300) {
+    mode = 1
+  } else {
+    mode = 0
+  }
 }
 

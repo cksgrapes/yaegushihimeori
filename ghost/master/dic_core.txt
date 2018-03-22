@@ -38,6 +38,7 @@ RandomTalk
 	//おまじない
 	'\1\s[10]\0\s[0]'
 	--
+	CheckEmotion
 	DelayedTalkEval(RandomTalkEx())
 }
 
@@ -46,14 +47,24 @@ RandomTalkEx : nonoverlap
 	parallel RandomTalkArrayNewTalk
 }
 
+SetDefaultTalkName {
+  _default_talkname = 'NormalTalk'
+  if (ISVAR('mode') != 0) {
+    _default_talkname += "%(mode)"
+  }
+  _default_talkname
+}
+
 RandomTalkArrayNewTalk
 {
+  _default_talkname = SetDefaultTalkName
+
 	_talknew_func = IARRAY
-	_talknew_func ,= 'New.NormalTalk'
+	_talknew_func ,= 'New.' + _default_talkname
 	_earray = GetEvalTalkArray
 	_n = ARRAYSIZE(_earray)
 	for _i = 0 ; _i < _n ; _i++ {
-		_talknew_func ,= 'New.NormalTalk_' + _earray[_i]
+		_talknew_func ,= 'New.' + _default_talkname + '_' + _earray[_i]
 	}
 
 	if ISVAR('last_new_talk_id_array') == 0 {
@@ -105,8 +116,10 @@ RandomTalkArrayNewTalk
 
 RandomTalkArray
 {
+  _default_talkname = SetDefaultTalkName
+
 	_talk    = IARRAY
-	_talknew = TalkEval('New.NormalTalk')
+	_talknew = TalkEval('New.' + _default_talkname)
 	_n       = ARRAYSIZE(_talknew)
 	if _n >= 2 { //1行目は日付
 		_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
@@ -115,70 +128,19 @@ RandomTalkArray
 	_earray = GetEvalTalkArray
 	_n = ARRAYSIZE(_earray)
 	for _i = 0 ; _i < _n ; _i++ {
-		_talknew = TalkEval('New.NormalTalk_' + _earray[_i])
+		_talknew = TalkEval('New.' + _default_talkname + '_' + _earray[_i])
 		_tnum = ARRAYSIZE(_talknew)
 		if _tnum >= 2 { //1行目は日付
 			_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
 		}
 
-		_talk ,= TalkEval('NormalTalk_' + _earray[_i])
+		_talk ,= TalkEval(_default_talkname + '_' + _earray[_i])
 	}
 	//そしてこれがふつう
-	_talk ,= TalkEval('NormalTalk')
+	_talk ,= TalkEval(_default_talkname)
 
 	_talk
 }
-
-//RandomTalkArrayEx
-//{
-//	_talk    = IARRAY
-//	_talknew = TalkEval('AddNew.TalkNormal')
-//	_n       = ARRAYSIZE(_talknew)
-//	if _n >= 2 { //1行目は日付
-//		_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
-//	}
-//	//季節その他
-//	_earray = GetEvalTalkArray
-//	_n = ARRAYSIZE(_earray)
-//	for _i = 0 ; _i < _n ; _i++ {
-//		_talknew = TalkEval('AddNew.Talk' + _earray[_i])
-//		_tnum = ARRAYSIZE(_talknew)
-//		if _tnum >= 2 { //1行目は日付
-//			_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
-//		}
-//
-//		_talk ,= TalkEval('Talk' + _earray[_i])
-//	}
-//	//そしてこれがふつう
-//	_talk ,= TalkEval('TalkNormal')
-//
-//	_cond    = GetConditionArray
-//	_cnum    = ARRAYSIZE(_cond)
-//
-//	for _i = 0 ; _i < _cnum ; _i++ {
-//		_talknew = TalkEval('AddNew.TalkNormal.' + _cond[_i])
-//		_n       = ARRAYSIZE(_talknew)
-//		if _n >= 2 { //1行目は日付
-//			_talk ,= _talknew[1,65535] //優先トークが終わったらまぜる
-//		}
-//		//季節その他
-//		_earray = GetEvalTalkArray
-//		_n = ARRAYSIZE(_earray)
-//		for _j = 0 ; _j < _n ; _j++ {
-//			_talknew = TalkEval('AddNew.Talk' + _earray[_j] + '.' + _cond[_i])
-//			_tnum = ARRAYSIZE(_talknew)
-//			if _tnum >= 2 { //1行目は日付
-//				_talk ,= _talknew[1,_tnum-1] //優先トークが終わったらまぜる
-//			}
-//
-//			_talk ,= TalkEval('Talk' + _earray[_j] + '.' + _cond[_i])
-//		}
-//		//そしてこれがふつう
-//		_talk ,= TalkEval('TalkNormal.' + _cond[_i])
-//	}
-//
-//	_talk
-//}
 
 GetEvalTalkArray
 {
