@@ -257,10 +257,14 @@ RoundEmotion
 -----------------------------------------------------------------------------*/
 CheckEmotion
 {
-  if (love > 300) {
-    mode = 'Love'
-  } else {
-    mode = 'Normal'
-  }
+  //分岐しない場合はこっち
+  mode = 'Normal'
+
+  //分岐するときはこっち
+//  if (love > 300) {
+//    mode = 'Love'
+//  } else {
+//    mode = 'Normal'
+//  }
 }
 
