@@ -203,3 +203,44 @@ GetChoices
     _str = CUTSPACE(_str)
     _str
 }
+
+/*-----------------------------------------------------------------------------
+  フィードバックを送る
+-----------------------------------------------------------------------------*/
+OnInputFeedback
+{
+  _content = "ご意見ご感想など、フィードバックをお待ちしております"
+  _id      = 'OnConfirmFeedback'
+	InputFeedback(_content,_id)
+}
+
+OnConfirmFeedback
+{
+  _ref     = reference[0]
+  _content = "以下の内容で送信されます"
+  _id      = 'OnSendFeedback'
+  ConfirmFeedback(_ref,_content,_id)
+}
+
+OnConfirmFeedbackCancel
+{
+  Setting
+}
+
+OnSendFeedback
+{
+  _content = reference[0]
+  _category = 'フィードバック'
+  _id = 'OnExecuteSendFeedback'
+  SendFeedback(_content,_category,_id)
+}
+
+OnExecuteSendFeedback
+{
+  "\1\s[10]\_q（台詞を送信しました。次回の更新をお待ちください）\_q\e"
+}
+
+OnExecuteSendFeedbackFailure
+{
+  SendFeedbackFailure
+}
