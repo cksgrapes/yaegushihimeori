@@ -60,11 +60,6 @@ FirstBootTalk
 /*-----------------------------------------------------------------------------
   起動
 -----------------------------------------------------------------------------*/
-OnInitialize {
-  SetMood
-  CheckEmotion
-}
-
 OnBoot : nonoverlap
 {
 	if ( month == userBDmonth && day == userBDday )

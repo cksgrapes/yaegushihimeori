@@ -9,14 +9,14 @@ Click_0
 //    Test
 //    Setting
 //	OnAITalk
-//    Communicate
+    Communicate
 //Test
 //love = 0
-//--
+////--
 //AdjustEmotion('love','---')
-//--
+////--
 //"love:%(love) mode:%(mode)"
-GetMoodSlot
+////GetMoodSlot
 }
 
 /*-----------------------------------------------------------------------------

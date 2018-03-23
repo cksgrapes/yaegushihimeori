@@ -5,28 +5,57 @@
 =============================================================================*/
 
 /*-----------------------------------------------------------------------------
-  起動・終了初期化
+  ゴーストのロード
+  起動毎の変数の初期化などはここで
 -----------------------------------------------------------------------------*/
-OnSystemLoad.AYATEMPLATE
+OnGhostLoad
 {
-	AYATEMPLATE.installedplugin_name = IARRAY
-	AYATEMPLATE.installedplugin_id = IARRAY
-	AYATEMPLATE.stroke = IARRAY
-	AYATEMPLATE.strokeid = IARRAY
-	AYATEMPLATE.stroketimer = IARRAY
-	AYATEMPLATE.mikireflag = 0
-	AYATEMPLATE.LastTalk = ''
+  SetMood //機嫌を設定
+  CheckEmotion //感情値を確認
 }
 
-OnSystemUnload.AYATEMPLATE
+/*-----------------------------------------------------------------------------
+  ゴーストのアンロード
+  起動毎の変数の初期化などはここで
+-----------------------------------------------------------------------------*/
+OnGhostUnload
 {
-	//ERASEVAR('AYATEMPLATE.installedplugin_name')
-	//ERASEVAR('AYATEMPLATE.installedplugin_id')
-	ERASEVAR('AYATEMPLATE.stroke')
-	ERASEVAR('AYATEMPLATE.strokeid')
-	ERASEVAR('AYATEMPLATE.stroketimer')
-	ERASEVAR('AYATEMPLATE.mikireflag')
-	ERASEVAR('AYATEMPLATE.LastTalk')
+	//なで反応で使用する変数の削除
+	ERASEVAR('stroke')
+	ERASEVAR('prev_reference4')
+	ERASEVAR('nade_prev')
+
+	//見切れ・重なりで使用する変数の削除
+	ERASEVAR('mikireflag','mikiretimer')
+	ERASEVAR('kasanariflag','kasanaritimer')
+
+	//最終終了時刻。後で使うかもしれないので記録（省略可）
+	//（長期間起動しなかった時の反応等に）
+	LastCloseTime	= GETTIME
+}
+
+/*-----------------------------------------------------------------------------
+  ランダムトーク
+-----------------------------------------------------------------------------*/
+OnAITalk
+{
+	OnAiTalk
+}
+
+OnAiTalk
+{
+	if CHAIN.IDName == "" {
+		lastTalk = RandomTalk
+	}
+	else {
+		lastTalk = ChainTalk
+	}
+	lastTalk
+}
+
+OnLastTalk
+{
+	"%(lastTalk)"
 }
 
 /*-----------------------------------------------------------------------------
@@ -48,10 +77,7 @@ RandomTalkEx : nonoverlap
 }
 
 SetDefaultTalkName {
-  _default_talkname = 'NormalTalk'
-  if (ISVAR('mode') != 0) {
-    _default_talkname += "%(mode)"
-  }
+  _default_talkname = "MyRandomTalk.%(mode)"
   _default_talkname
 }
 
@@ -509,57 +535,6 @@ OnAnchorSelectEx
 OnUserInput
 {
 	EVAL(reference[0])
-}
-
-/*-----------------------------------------------------------------------------
-  ゴーストのロード
-  起動毎の変数の初期化などはここで
------------------------------------------------------------------------------*/
-OnGhostLoad
-{
-}
-
-/*-----------------------------------------------------------------------------
-  ゴーストのアンロード
-  起動毎の変数の初期化などはここで
------------------------------------------------------------------------------*/
-OnGhostUnload
-{
-	//なで反応で使用する変数の削除
-	ERASEVAR('stroke')
-	ERASEVAR('prev_reference4')
-	ERASEVAR('nade_prev')
-
-	//見切れ・重なりで使用する変数の削除
-	ERASEVAR('mikireflag','mikiretimer')
-	ERASEVAR('kasanariflag','kasanaritimer')
-
-	//最終終了時刻。後で使うかもしれないので記録（省略可）
-	//（長期間起動しなかった時の反応等に）
-	LastCloseTime	= GETTIME
-}
-
-/*-----------------------------------------------------------------------------
-  ランダムトーク
------------------------------------------------------------------------------*/
-
-OnAITalk {
-	OnAiTalk
-}
-
-OnAiTalk
-{
-	if CHAIN.IDName == "" {
-		lastTalk = RandomTalk
-	}
-	else {
-		lastTalk = ChainTalk
-	}
-	lastTalk
-}
-
-OnLastTalk {
-	"%(lastTalk)"
 }
 
 /*-----------------------------------------------------------------------------

@@ -28,15 +28,16 @@ dic, system\yaya_optional.dic // YAYA:オプション機能群用辞書
 dic, dic_core.txt        //コア設定辞書
 dic, dic_utilities.txt   //ユーティリティ辞書
 
-dic, dic_bootend.txt     //起動終了トーク辞書
-dic, dic_talk.txt        //ランダムトーク辞書
-dic, dic_communicate.txt //コミュニケート辞書
-dic, dic_mouse.txt       //触り反応辞書
-dic, dic_menu.txt        //メニュー辞書
-dic, dic_time.txt        //日時イベント辞書
-dic, dic_events.txt      //その他イベント辞書
-dic, dic_resources.txt   //リソース辞書
-dic, dic_words.txt       //単語辞書
+dic, dic_bootend.txt        //起動終了トーク辞書
+dic, dic_talk.txt           //ランダムトーク辞書
+dic, dic_communicate.txt    //コミュニケート辞書
+dic, dic_communicate_ex.txt //コミュニケート回答辞書
+dic, dic_mouse.txt          //触り反応辞書
+dic, dic_menu.txt           //メニュー辞書
+dic, dic_time.txt           //日時イベント辞書
+dic, dic_events.txt         //その他イベント辞書
+dic, dic_resources.txt      //リソース辞書
+dic, dic_words.txt          //単語辞書
 
 /*-----------------------------------------------------------------------------
   セーブファイル暗号化
