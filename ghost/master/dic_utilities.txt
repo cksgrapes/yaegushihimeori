@@ -100,8 +100,8 @@ TextOnlyTranslatorFunc
 SetUserBirthday
 {
 	_i = SPLIT(userbd,'/')
-	userBDmonth = _i[0]
-	userBDday = _i[1]
+	userbdmonth = _i[0]
+	userbdday = _i[1]
 }
 
 /*-----------------------------------------------------------------------------

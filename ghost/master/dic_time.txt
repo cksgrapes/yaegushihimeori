@@ -17,7 +17,7 @@ OnSecondChange
 OnMinuteChange
 {
 	if ( minute == 0 ) {
-		if ( hour == 0 && month == userBDmonth && day == userBDday )
+		if ( hour == 0 && month == userbdmonth && day == userbdday )
 		{
 			event_ユーザ誕生日
 		}

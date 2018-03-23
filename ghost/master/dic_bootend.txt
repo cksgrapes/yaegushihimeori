@@ -62,7 +62,7 @@ FirstBootTalk
 -----------------------------------------------------------------------------*/
 OnBoot : nonoverlap
 {
-	if ( month == userBDmonth && day == userBDday )
+	if ( month == userbdmonth && day == userbdday )
 	{
 		event_ユーザ誕生日
 	}

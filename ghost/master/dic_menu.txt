@@ -13,7 +13,7 @@ Setting
 	<b>< Settings ></b>\n\n[half]/
 	<b>[呼び名]</b> \q[%(username),UserNameEntry]　/
 	<b>[一人称]</b> \q[%(userfp),UserFirstPersonEntry]\n\n[half]/
-	<b>[誕生日]</b> \q[%(userBDmonth)/%(userBDday),UserBirthdayEntry]　/
+	<b>[誕生日]</b> \q[%(userbdmonth)/%(userbdday),UserBirthdayEntry]　/
 	<b>[性別]</b> %(choose_user_gender)\n\n[half]/
 	<b>[喋り頻度]</b> %(choose_talk_interval)\n\n[half]/
 	<b>[未対応コミュワード送信]</b> %(choose_send_saidword)\n\n[half]/
