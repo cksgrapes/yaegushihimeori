@@ -20,6 +20,9 @@ OnGhostLoad
 -----------------------------------------------------------------------------*/
 OnGhostUnload
 {
+	//保存不要変数の削除
+	ERASEVAR('mood')
+
 	//なで反応で使用する変数の削除
 	ERASEVAR('stroke')
 	ERASEVAR('prev_reference4')
