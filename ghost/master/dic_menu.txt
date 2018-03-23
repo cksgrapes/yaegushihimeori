@@ -32,7 +32,7 @@ UserNameEntry
 OnUsernameInput
 {
 	_content = EscapeDangerousTags(reference[0])
-	if (_content != '') {
+	if (_content != '' && _content != ' ' && _content != '　') {
 		username = _content
 	}
   Setting
@@ -51,7 +51,7 @@ UserFirstPersonEntry
 OnUserFPInput
 {
 	_content = EscapeDangerousTags(reference[0])
-    if (_content != '') {
+  if (_content != '' && _content != ' ' && _content != '　') {
 		userfp = _content
 	}
 	Setting
@@ -70,7 +70,7 @@ UserBirthdayEntry
 OnUserBDInput
 {
 	_content = EscapeDangerousTags(reference[0])
-	if (_content != '') {
+	if (_content != '' && _content != ' ' && _content != '　') {
 		userbd = _content
 		SetUserBirthday
 	}
