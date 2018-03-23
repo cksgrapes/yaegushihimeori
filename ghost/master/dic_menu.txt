@@ -7,7 +7,8 @@
 /*-----------------------------------------------------------------------------
   ユーザ設定
 -----------------------------------------------------------------------------*/
-Setting {
+Setting
+{
 	"\1\s[10]\_q/
 	<b>< Settings ></b>\n\n[half]/
 	<b>[呼び名]</b> \q[%(username),UserNameEntry]　/
@@ -23,11 +24,13 @@ Setting {
 /*-----------------------------------------------------------------------------
   名前を教える
 -----------------------------------------------------------------------------*/
-UserNameEntry {
+UserNameEntry
+{
 	"\1\s[10]\_q（呼ばれたい名前を入力してください。敬称を含む場合は、敬称も込みで入力してください）\_q\_w[500]\![open,inputbox,OnUsernameInput,-1]\e"
 }
 
-OnUsernameInput {
+OnUsernameInput
+{
 	_content = EscapeDangerousTags(reference[0])
 	if (_content != '') {
 		username = _content
@@ -40,11 +43,13 @@ OnUsernameInputCancel { Setting }
 /*-----------------------------------------------------------------------------
   一人称を教える
 -----------------------------------------------------------------------------*/
-UserFirstPersonEntry {
+UserFirstPersonEntry
+{
 	"\1\s[10]\_q（あなたの一人称を入力してください）\_q\_w[500]\![open,inputbox,OnUserFPInput,-1]\e"
 }
 
-OnUserFPInput {
+OnUserFPInput
+{
 	_content = EscapeDangerousTags(reference[0])
     if (_content != '') {
 		userfp = _content
@@ -57,11 +62,13 @@ OnUserFPInputCancel { Setting }
 /*-----------------------------------------------------------------------------
   誕生日を教える
 -----------------------------------------------------------------------------*/
-UserBirthdayEntry {
+UserBirthdayEntry
+{
 	"\1\s[10]\_q（あなたの誕生日を 1/1 や 12/31 のような形式を用いて、半角で入力してください）\_q\_w[500]\![open,inputbox,OnUserBDInput,-1]\e"
 }
 
-OnUserBDInput {
+OnUserBDInput
+{
 	_content = EscapeDangerousTags(reference[0])
 	if (_content != '') {
 		userbd = _content
@@ -75,26 +82,31 @@ OnUserBDInputCancel { Setting }
 /*-----------------------------------------------------------------------------
   ユーザ性別を設定する
 -----------------------------------------------------------------------------*/
-SetUserGender_女 {
+SetUserGender_女
+{
     SetUserGender('女')
 }
 
-SetUserGender_男 {
+SetUserGender_男
+{
     SetUserGender('男')
 }
 
-SetUserGender_その他 {
+SetUserGender_その他
+{
     SetUserGender('その他')
 }
 
-SetUserGender {
+SetUserGender
+{
     usergender = _argv[0]
     choose_user_gender = GetGenderChoices(_argv[0])
 
     Setting
 }
 
-GetGenderChoices {
+GetGenderChoices
+{
     _name = "男,女,その他"
     _func = 'SetUserGender'
     GetChoices(_name,_func,_argv[0])
@@ -104,34 +116,41 @@ GetGenderChoices {
   喋り頻度を選択する
 -----------------------------------------------------------------------------*/
 
-SetTalkInterval_高 {
+SetTalkInterval_高
+{
     SetTalkInterval(60,'高')
 }
 
-SetTalkInterval_中 {
+SetTalkInterval_中
+{
     SetTalkInterval(120,'中')
 }
 
-SetTalkInterval_低 {
+SetTalkInterval_低
+{
     SetTalkInterval(180,'低')
 }
 
-SetTalkInterval_稀 {
+SetTalkInterval_稀
+{
     SetTalkInterval(300,'稀')
 }
 
-SetTalkInterval_黙 {
+SetTalkInterval_黙
+{
     SetTalkInterval(60,'黙')
 }
 
-SetTalkInterval {
+SetTalkInterval
+{
     aitalkinterval = _argv[0]
     choose_talk_interval = GetTalkIntervalChoices(_argv[1])
 
     Setting
 }
 
-GetTalkIntervalChoices {
+GetTalkIntervalChoices
+{
     _name = "高,中,低,稀,黙"
     _func = 'SetTalkInterval'
     GetChoices(_name,_func,_argv[0])
@@ -140,22 +159,26 @@ GetTalkIntervalChoices {
 /*-----------------------------------------------------------------------------
   コミュワード送信を選択する
 -----------------------------------------------------------------------------*/
-SetSendSaidWord_する {
+SetSendSaidWord_する
+{
     SetSendSaidWord(1,'する')
 }
 
-SetSendSaidWord_しない {
+SetSendSaidWord_しない
+{
     SetSendSaidWord(0,'しない')
 }
 
-SetSendSaidWord {
+SetSendSaidWord
+{
     sendsaidword = _argv[0]
     choose_send_saidword = GetSendSaidWordChoices(_argv[1])
 
     Setting
 }
 
-GetSendSaidWordChoices {
+GetSendSaidWordChoices
+{
     _name = "する,しない"
     _func = 'SetSendSaidWord'
     GetChoices(_name,_func,_argv[0])
@@ -164,7 +187,8 @@ GetSendSaidWordChoices {
 /*-----------------------------------------------------------------------------
   選択肢のリストを取得する
 -----------------------------------------------------------------------------*/
-GetChoices {
+GetChoices
+{
     _name   = _argv[0]
     _func   = _argv[1]
     _choice = _argv[2]

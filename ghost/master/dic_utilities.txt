@@ -50,7 +50,8 @@ AYATEMPLATE.EscapeText
 /*-----------------------------------------------------------------------------
   内部トランスレート
 -----------------------------------------------------------------------------*/
-OnTranslateInternal {
+OnTranslateInternal
+{
 	_text = _argv[0]
 	_text = TextOnlyTranslator(_text,'TextOnlyTranslatorFunc')
 	_text
@@ -96,7 +97,8 @@ TextOnlyTranslatorFunc
 /*-----------------------------------------------------------------------------
  ユーザ誕生日取得
 -----------------------------------------------------------------------------*/
-SetUserBirthday {
+SetUserBirthday
+{
 	_i = SPLIT(userbd,'/')
 	userBDmonth = _i[0]
 	userBDday = _i[1]
@@ -105,49 +107,57 @@ SetUserBirthday {
 /*-----------------------------------------------------------------------------
   バルーンや入力ボックスなどを閉じる
 -----------------------------------------------------------------------------*/
-Cancel {
+Cancel
+{
 	"\1\b[-1]\0\b[-1]\![close,inputbox,__SYSTEM_ALL_INPUT__]\e"
 }
 
 /*-----------------------------------------------------------------------------
   フィードバックを送る
 -----------------------------------------------------------------------------*/
-OnInputFeedback {
+OnInputFeedback
+{
   _content = "ご意見ご感想など、フィードバックをお待ちしております"
   _id      = 'OnConfirmFeedback'
 	InputFeedback(_content,_id)
 }
 
-OnConfirmFeedback {
+OnConfirmFeedback
+{
   _ref     = reference[0]
   _content = "以下の内容で送信されます"
   _id      = 'OnSendFeedback'
   ConfirmFeedback(_ref,_content,_id)
 }
 
-OnSendFeedback {
+OnSendFeedback
+{
   _content = reference[0]
   _category = 'フィードバック'
   _id = 'OnExecuteSendFeedback'
   SendFeedback(_content,_category,_id)
 }
 
-OnExecuteSendFeedback {
+OnExecuteSendFeedback
+{
   "\1\s[10]\_q（台詞を送信しました。次回の更新をお待ちください）\_q\e"
 }
 
-OnExecuteSendFeedbackFailure {
+OnExecuteSendFeedbackFailure
+{
   SendFeedbackFailure
 }
 
 /*-----------------------------------------------------------------------------
   フィードバック送信コア
 -----------------------------------------------------------------------------*/
-InputFeedback {
+InputFeedback
+{
 	"\1\s[10]\_q（%(_argv[0])）\_q\_w[500]\![open,inputbox,%(_argv[1]),-1]\e"
 }
 
-ConfirmFeedback {
+ConfirmFeedback
+{
 	_content = EscapeDangerousTags(_argv[0])
 	if (_content == '') {
 		"\1\s[10]\_q（何も入力されていません）\_q\e"
@@ -158,7 +168,8 @@ ConfirmFeedback {
 	}
 }
 
-SendFeedback {
+SendFeedback
+{
 	_content    = _argv[0]
 	_systempath = 'http://chikashi.org/nanika/feedback/wywue3ugz5.php'
 	_ghostname  = SHIORI3FW.GhostName
@@ -169,11 +180,13 @@ SendFeedback {
 	"\1\s[10]\![execute,http-post,%(_systempath),--async=%(_id),--nodescript,--file=%(CHR(0x22))feedback.log%(CHR(0x22)),--param=ghostname=%(_ghostname)&sakuraname=%(_sakuraname)&category=%(_category)&message=%(_content),--timeout=5]\e"
 }
 
-SendFeedbackFailure {
+SendFeedbackFailure
+{
   "\1\s[10]\_q（送信に失敗しました）\_q\e"
 }
 
-CancelSendFeedback {
+CancelSendFeedback
+{
 	"\1\s[10]\_q（キャンセルしました）\_q\e"
 }
 
@@ -186,7 +199,8 @@ CancelSendFeedback {
 1/5の確率でNervous
 3/5の確率でNormal
 */
-SetMood {
+SetMood
+{
   mood = RAND(10)+1
 }
 
@@ -194,7 +208,8 @@ SetMood {
   感情値調整（--- 〜 +++）
   Ex: AdjustEmotion('love','++')
 -----------------------------------------------------------------------------*/
-AdjustEmotion {
+AdjustEmotion
+{
   _emotionname = _argv[0]
 
   //変数がなかった場合、作成する
@@ -224,7 +239,8 @@ AdjustEmotion {
 /*-----------------------------------------------------------------------------
   感情値を丸める
 -----------------------------------------------------------------------------*/
-RoundEmotion {
+RoundEmotion
+{
   _emotionname = _argv[0]
   _value       = _argv[1]
   _minimum     = _argv[2]
@@ -239,7 +255,8 @@ RoundEmotion {
 /*-----------------------------------------------------------------------------
   感情値チェック
 -----------------------------------------------------------------------------*/
-CheckEmotion {
+CheckEmotion
+{
   if (love > 300) {
     mode = 'Love'
   } else {

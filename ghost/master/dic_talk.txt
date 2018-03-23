@@ -140,11 +140,13 @@ MyRandomTalk.Normal : array
   '傲慢。何不自由なく生きてきたのに、こんなものになってしまった。'
 }
 
-MyRandomTalk.Normal_Morning : array {
+MyRandomTalk.Normal_Morning : array
+{
   '機能するか？'
 }
 
-MyRandomTalk.Love : array {
+MyRandomTalk.Love : array
+{
   'いちちちちｔ'
   'うそおそそそｓ'
 }
@@ -152,7 +154,8 @@ MyRandomTalk.Love : array {
 /*-----------------------------------------------------------------------------
   通常かつ気分がハイなトーク
 -----------------------------------------------------------------------------*/
-MyRandomTalk.Normal_High : array {
+MyRandomTalk.Normal_High : array
+{
   'はいでーす！'
 }
 

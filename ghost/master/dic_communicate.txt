@@ -7,7 +7,8 @@
 /*-----------------------------------------------------------------------------
   選択コミュニケートコア
 -----------------------------------------------------------------------------*/
-Communicate {
+Communicate
+{
 	"\1\s[10]\0\s[0]"
 	--
 	"ん、どしたの。"
@@ -16,11 +17,13 @@ Communicate {
 	GetWordList
 }
 
-CommunicateEx {
+CommunicateEx
+{
 	GetWordList
 }
 
-GetWordList {
+GetWordList
+{
 	"\1\s[10]\_w[300]"
 	--
 	_text = ""
@@ -39,46 +42,54 @@ GetWordList {
 /*-----------------------------------------------------------------------------
   選択コミュニケート台詞を送信
 -----------------------------------------------------------------------------*/
-OnInputCommWord {
+OnInputCommWord
+{
   _content = "姫織に言いたい台詞をご記入ください"
   _id      = 'OnConfirmCommWord'
 	InputFeedback(_content,_id)
 }
 
-OnConfirmCommWord {
+OnConfirmCommWord
+{
   _ref     = reference[0]
   _content = "以下の台詞でよろしいですか？"
   _id      = 'OnSendCommWord'
   ConfirmFeedback(_ref,_content,_id)
 }
 
-OnSendCommWord {
+OnSendCommWord
+{
   _content = reference[0]
   _category = '姫織に言いたい台詞'
   _id = 'OnExecuteSendCommWord'
   SendFeedback(_content,_category,_id)
 }
 
-OnExecuteSendCommWord {
+OnExecuteSendCommWord
+{
   "\1\s[10]\_q（台詞を送信しました。次回の更新をお待ちください）\_q\e"
 }
 
-OnExecuteSendCommWordFailure {
+OnExecuteSendCommWordFailure
+{
   SendFeedbackFailure
 }
 
 /*-----------------------------------------------------------------------------
   フリーコミュニケートコア
 -----------------------------------------------------------------------------*/
-OnFreeComm {
+OnFreeComm
+{
   "\![open,communicatebox]\e"
 }
 
-OnCommunicateInputCancel {
+OnCommunicateInputCancel
+{
   Communicate
 }
 
-ReplyToUser {
+ReplyToUser
+{
   _content = EscapeDangerousTags(reference[1])
   FreeCommunicate(_content)
 }
@@ -86,7 +97,8 @@ ReplyToUser {
 /*-----------------------------------------------------------------------------
   未対応コミュワード処理
 -----------------------------------------------------------------------------*/
-UserSaidIgnorant {
+UserSaidIgnorant
+{
   if (sendsaidword == 1) {
     _content = _argv[0]
     _category = '未対応コミュワード'
@@ -97,18 +109,21 @@ UserSaidIgnorant {
   }
 }
 
-OnExecuteSendUserSaidWord {
+OnExecuteSendUserSaidWord
+{
   UserSaid_知らない言葉
 }
 
-OnExecuteSendUserSaidWordFailure {
+OnExecuteSendUserSaidWordFailure
+{
   UserSaid_知らない言葉
 }
 
 /*-----------------------------------------------------------------------------
   選択コミュニケート台詞リスト
 -----------------------------------------------------------------------------*/
-CommWordList : nonoverlap {
+CommWordList : nonoverlap
+{
 	"\q[「朝ごはんは食べたかい？」,UserSaid_朝ごはん食べた？]"
 	"\q[「おはよ、姫織くん」,UserSaid_おはよう]"
 }
@@ -116,7 +131,8 @@ CommWordList : nonoverlap {
 /*-----------------------------------------------------------------------------
   フリーコミュニケート
 -----------------------------------------------------------------------------*/
-FreeCommunicate {
+FreeCommunicate
+{
   _content = _argv[0]
   if (RE_SEARCH(_content,'おは|はよ')) {
     UserSaid_おはよう

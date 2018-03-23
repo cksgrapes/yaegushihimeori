@@ -387,12 +387,14 @@ OnBIFFComplete
 }
 
 //メーラーを開く
-OpenMailer {
+OpenMailer
+{
 	"\C\![open,mailer]\e"
 }
 
 //メーラーを開かない
-CancelOpenMailer {
+CancelOpenMailer
+{
 	"\1\s[10]\b[-1]\0\s[0]\b[-1]\e"
 }
 
